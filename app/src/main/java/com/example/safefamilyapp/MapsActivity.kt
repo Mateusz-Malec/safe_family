@@ -83,7 +83,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val list = geocoder.getFromLocation(lat, lng, 1)
         return list[0].getAddressLine(0)
     }
-
+    
     private fun vectorToBitmap(context: Context, drawableId: Int): BitmapDescriptor {
         val drawable = ContextCompat.getDrawable(context, drawableId)
         val bitmap = Bitmap.createBitmap(

@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         button = findViewById(R.id.btn_map)
-        val intent = Intent(this, MapsActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
 
         button.setOnClickListener {
             startActivity(intent)
