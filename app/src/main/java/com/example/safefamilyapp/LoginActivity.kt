@@ -26,7 +26,6 @@ class LoginActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             if (etMail.text.contentEquals("admin") and etPass.text.contentEquals("admin")) {
                 val intent = Intent(this, MapsActivity::class.java)
-
                 startActivity(intent)
             }
             else {
