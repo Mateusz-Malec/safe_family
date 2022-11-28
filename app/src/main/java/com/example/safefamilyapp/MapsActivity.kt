@@ -83,7 +83,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         )
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
-        DrawableCompat.setTint(drawable, Color.RED)
+        DrawableCompat.setTint(drawable, getColor(R.color.md_theme_dark_primaryContainer))
         drawable.draw(canvas)
 
         return BitmapDescriptorFactory.fromBitmap(bitmap)
