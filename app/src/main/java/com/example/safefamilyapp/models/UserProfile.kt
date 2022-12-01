@@ -1,4 +1,4 @@
-package com.example.safefamilyapp
+package com.example.safefamilyapp.models
 
 data class UserProfile(
     val Name: String? = null,
