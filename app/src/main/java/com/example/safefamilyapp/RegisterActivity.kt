@@ -1,9 +1,14 @@
 package com.example.safefamilyapp
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.safefamilyapp.models.Register
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
     lateinit var username: EditText
@@ -28,15 +33,30 @@ class RegisterActivity : AppCompatActivity() {
         btn = findViewById(R.id.registerButton)
 
         btn.setOnClickListener {
-            val registerUser = Register(
-                username.toString(),
-                password.toString(),
-                passwordConfirm.toString(),
-                name.toString(),
-                surname.toString(),
-                mail.toString(),
-                phoneNumber.toString()
+            val user = Register(
+                username.text.toString(),
+                password.text.toString(),
+                passwordConfirm.text.toString(),
+                name.text.toString(),
+                surname.text.toString(),
+                mail.text.toString(),
+                phoneNumber.text.toString()
             )
+            register(user)
+        }
+    }
+
+    private fun register(user: Register) {
+
+        GlobalScope.launch {
+            val apiService = RestApiService()
+            apiService.registerUser(user) {
+                if (it == null) {
+                    Log.e("Register Error", "Błąd")
+                } else {
+                    finish()
+                }
+            }
         }
     }
 }

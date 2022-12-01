@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Button
@@ -12,6 +13,8 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.example.safefamilyapp.models.Login
+import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {
     lateinit var etMail: EditText
@@ -32,31 +35,46 @@ class LoginActivity : AppCompatActivity() {
         // disable login button unless both username / password is valid
         //loginButton.isEnabled =  isPasswordValid(etPass.text)
 
+        //val api = "https://665e-91-237-73-2.eu.ngrok.io/api/Login?Login=Dorkman&Password=okon1234"
+
+
         etPass.addTextChangedListener {
-                loginButton.isEnabled  = isPasswordValid(etPass.text)
+            loginButton.isEnabled = isPasswordValid(etPass.text)
         }
+
         loginButton.setOnClickListener {
             loading.visibility = View.VISIBLE
-            if (etMail.text.contentEquals("admin") and etPass.text.contentEquals("admin")) {
-                val intent = Intent(this, MapsActivity::class.java)
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "błąd", Toast.LENGTH_SHORT).show()
-            }
+            val login = Login(etMail.text.toString(), etPass.text.toString())
+
+            loginWithoutApi(login)
+
         }
 
 
     }
 
     //private fun isDataValid(username: String, password: String): Boolean {
-   //     return isUserNameValid(username) //and isPasswordValid(password)
-   // }
+    //     return isUserNameValid(username) //and isPasswordValid(password)
+    // }
 
-    fun login(username: String, password: String) {
+    private fun login(login: Login) {
+        val apiService = RestApiService()
 
-        val result = Login(username, password)
-        //isUserNameValid(username)
-        //isPasswordValid(password)
+        apiService.loginUser2(login) {
+            if (it == null) {
+                Toast.makeText(this, "Błąd", Toast.LENGTH_SHORT).show()
+            } else {
+                finish()
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
+    private fun loginWithoutApi (login: Login){
+        finish()
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
     }
 
     // A placeholder username validation check
@@ -70,6 +88,6 @@ class LoginActivity : AppCompatActivity() {
 
     // A placeholder password validation check
     private fun isPasswordValid(password: Editable): Boolean {
-        return password.length > 4
+        return password.length > 3
     }
 }

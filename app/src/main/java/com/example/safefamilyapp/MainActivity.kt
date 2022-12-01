@@ -8,16 +8,22 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var button: Button
+    lateinit var button1: Button
+    lateinit var button2: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        button = findViewById(R.id.btn_map)
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        //button.setOnClickListener {
-        //    startActivity(intent)
-        //}
+        button1 = findViewById(R.id.btn_login)
+        button2 = findViewById(R.id.btn_register)
+        button1.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+        button2.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
     }
+
 }
