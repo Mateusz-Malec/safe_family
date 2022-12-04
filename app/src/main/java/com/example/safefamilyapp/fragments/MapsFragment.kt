@@ -1,12 +1,14 @@
-package com.example.safefamilyapp
+package com.example.safefamilyapp.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.safefamilyapp.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
@@ -18,14 +20,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
 
+    lateinit var mapView: MapView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_maps, container, false)
 
+        //mapView=rootView.findViewById(R.id.mapView)
+
         val mapFragment = childFragmentManager
-            .findFragmentById(R.id.mapView) as? SupportMapFragment
+            .findFragmentById(R.id.mapView) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
         return rootView

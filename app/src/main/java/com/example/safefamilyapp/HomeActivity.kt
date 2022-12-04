@@ -1,13 +1,16 @@
 package com.example.safefamilyapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.safefamilyapp.fragments.HomeFragment
+import com.example.safefamilyapp.fragments.MapsFragment
+import com.example.safefamilyapp.fragments.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
-
     lateinit var bottomNavigationView: BottomNavigationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -17,7 +20,7 @@ class HomeActivity : AppCompatActivity() {
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
         bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId){
+            when (it.itemId) {
                 R.id.home -> {
                     loadFragment(HomeFragment())
                     true
@@ -36,10 +39,10 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private  fun loadFragment(fragment: Fragment) {
+    private fun loadFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragmentsContainer,fragment)
-        transaction.addToBackStack(null)
+        transaction.replace(R.id.fragmentsContainer, fragment)
+        //transaction.addToBackStack(null)
         transaction.commit()
     }
 }

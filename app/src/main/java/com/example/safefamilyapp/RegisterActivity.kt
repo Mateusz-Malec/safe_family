@@ -7,17 +7,19 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.safefamilyapp.models.Register
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
-    lateinit var username: EditText
-    lateinit var mail: EditText
-    lateinit var password: EditText
-    lateinit var passwordConfirm: EditText
-    lateinit var name: EditText
-    lateinit var surname: EditText
-    lateinit var phoneNumber: EditText
+    lateinit var username: TextInputEditText
+    lateinit var mail: TextInputEditText
+    lateinit var password: TextInputEditText
+    lateinit var passwordConfirm: TextInputEditText
+    lateinit var name: TextInputEditText
+    lateinit var surname: TextInputEditText
+    lateinit var phoneNumber: TextInputEditText
     lateinit var btn: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +48,16 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun register(user: Register) {
 
         GlobalScope.launch {
             val apiService = RestApiService()
             apiService.registerUser(user) {
                 if (it == null) {
-                    Log.e("Register Error", "Błąd")
+                    //Log.e("Register Error", "Błąd")
                 } else {
+                    //Toast.makeText(this, "Zarejestrowano", Toast.LENGTH_SHORT).show()
                     finish()
                 }
             }
