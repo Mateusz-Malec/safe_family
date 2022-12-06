@@ -18,11 +18,11 @@ import com.google.android.material.textfield.TextInputEditText
 import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {
-    lateinit var loginButton: Button
-    lateinit var loading: ProgressBar
+    private lateinit var loginButton: Button
+    private lateinit var loading: ProgressBar
 
-    lateinit var username: TextInputEditText
-    lateinit var password: TextInputEditText
+    private lateinit var username: TextInputEditText
+    private lateinit var password: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +47,8 @@ class LoginActivity : AppCompatActivity() {
             loading.visibility = View.VISIBLE
             val login = Login(username.text.toString(), password.text.toString())
 
-            loginWithApi(login)
-            //loginWithoutApi()
+            //loginWithApi(login)
+            loginWithoutApi()
 
         }
 
@@ -75,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginWithoutApi (){
         finish()
-        val intent = Intent(this, MapsActivity::class.java)
+        val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
     }
 

@@ -6,6 +6,7 @@ import com.example.safefamilyapp.models.Register
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class RestApiService {
 
@@ -106,6 +107,9 @@ class RestApiService {
 
                 override fun onResponse(call: Call<Any>, response: Response<Any>) {
                     responseBody = response.body()
+                    //File.createTempFile("filename", null, context.cacheDir)
+                    //val externalCacheFile = File(context.externalCacheDir, filename)
+
                     onResult(responseBody)
                     if (response.code() == 200) {
                         Log.d("Login success!\n\n", responseBody.toString())
@@ -117,12 +121,13 @@ class RestApiService {
         )
     }
 
-    fun refreshToken(token: Any?, onResult: (Register?) -> Unit) {
+    fun refreshToken(token: Any?, onResult: (Any?) -> Unit) {
         val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
 
         //val retIn = ServiceBuilder.buildService().create(ApiInterface::class.java)
 
-        retrofit.refreshLogin(token).enqueue(
+
+        retrofit.refreshLogin(responseBody).enqueue(
             object : Callback<Any> {
                 override fun onFailure(call: Call<Any>, t: Throwable) {
                     onResult(null)
@@ -134,11 +139,11 @@ class RestApiService {
                     //onResult(addedUser)
                     //Log.d("registerUser", response.code().toString() )
 
-                    if (response.code() == 201) {
-                        Log.d("Registration success!", response.toString())
+                    if (response.code() == 200) {
+                        Log.d("Login refresh!", response.toString())
 
                     } else {
-                        Log.e("Registration failed!",
+                        Log.e("Refresh failed!",
                             response.code().toString() + " " + response.message())
                     }
                 }

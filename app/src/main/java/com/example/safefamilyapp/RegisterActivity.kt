@@ -13,14 +13,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
-    lateinit var username: TextInputEditText
-    lateinit var mail: TextInputEditText
-    lateinit var password: TextInputEditText
-    lateinit var passwordConfirm: TextInputEditText
-    lateinit var name: TextInputEditText
-    lateinit var surname: TextInputEditText
-    lateinit var phoneNumber: TextInputEditText
-    lateinit var btn: Button
+    private lateinit var username: TextInputEditText
+    private lateinit var mail: TextInputEditText
+    private lateinit var password: TextInputEditText
+    private lateinit var passwordConfirm: TextInputEditText
+    private lateinit var name: TextInputEditText
+    private lateinit var surname: TextInputEditText
+    private lateinit var phoneNumber: TextInputEditText
+    private lateinit var btn: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
