@@ -1,10 +1,9 @@
 package com.example.safefamilyapp
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.safefamilyapp.models.Register
 import com.google.android.material.textfield.TextInputEditText
@@ -21,6 +20,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var surname: TextInputEditText
     private lateinit var phoneNumber: TextInputEditText
     private lateinit var btn: Button
+    private lateinit var toLoginActivity: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -33,6 +34,7 @@ class RegisterActivity : AppCompatActivity() {
         surname = findViewById(R.id.register_etSurname)
         phoneNumber = findViewById(R.id.register_etPhoneNumber)
         btn = findViewById(R.id.registerButton)
+        toLoginActivity = findViewById(R.id.registerToLogin)
 
         btn.setOnClickListener {
             val user = Register(
@@ -45,6 +47,11 @@ class RegisterActivity : AppCompatActivity() {
                 phoneNumber.text.toString()
             )
             register(user)
+        }
+
+        toLoginActivity.setOnClickListener {
+            finish()
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 

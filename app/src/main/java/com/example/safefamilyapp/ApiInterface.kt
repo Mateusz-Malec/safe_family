@@ -27,4 +27,7 @@ interface ApiInterface {
     @POST("/api/Login/refresh")
     fun refreshLogin(@Body refreshToken: Any?): Call<Any>
 
+    @GET("/api/profile")
+    fun displayProfile()
+
 }

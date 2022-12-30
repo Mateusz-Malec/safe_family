@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         button1 = findViewById(R.id.btn_login)
         button2 = findViewById(R.id.btn_register)
         button1.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, GuardActivity::class.java)
             startActivity(intent)
         }
         button2.setOnClickListener {

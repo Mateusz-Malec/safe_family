@@ -1,21 +1,18 @@
 package com.example.safefamilyapp
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.example.safefamilyapp.models.Login
 import com.google.android.material.textfield.TextInputEditText
-import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginButton: Button
@@ -23,6 +20,8 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var username: TextInputEditText
     private lateinit var password: TextInputEditText
+
+    private lateinit var toRegisterActivity: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +33,16 @@ class LoginActivity : AppCompatActivity() {
         username = findViewById(R.id.login_tietUsername)
         password = findViewById(R.id.login_tietPassword)
 
+        toRegisterActivity = findViewById(R.id.loginToRegister)
+
         // disable login button unless both username / password is valid
         //loginButton.isEnabled =  isPasswordValid(etPass.text)
 
 
-
         password.addTextChangedListener {
             loginButton.isEnabled = password.text?.let { it1 -> isPasswordValid(it1) } == true
+            if (password.text?.let { it1 -> isPasswordValid(it1) } == false) password.error =
+                getString(R.string.invalid_password)
         }
 
         loginButton.setOnClickListener {
@@ -52,6 +54,10 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
+        toRegisterActivity.setOnClickListener {
+            finish()
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
 
     }
 
@@ -73,23 +79,23 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun loginWithoutApi (){
+    private fun loginWithoutApi() {
         finish()
-        val intent = Intent(this, HomeActivity::class.java)
+        val intent = Intent(this, GuardActivity::class.java)
         startActivity(intent)
     }
 
     // A placeholder username validation check
-    private fun isUserNameValid(username: Editable): Boolean {
-        return if (username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
+    private fun isEmailValid(email: Editable): Boolean {
+        return if (email.contains('@')) {
+            Patterns.EMAIL_ADDRESS.matcher(email).matches()
         } else {
-            username.isNotBlank()
+            email.isNotBlank()
         }
     }
 
     // A placeholder password validation check
     private fun isPasswordValid(password: Editable): Boolean {
-        return password.length > 3
+        return password.length > 5 /*password.toString().toRegex().matches("[A-Z]{1,}[0-9]{1,}[a-z]"))*/
     }
 }

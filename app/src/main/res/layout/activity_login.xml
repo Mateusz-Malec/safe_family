@@ -70,7 +70,7 @@
     <Button
         android:id="@+id/loginButton"
         style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginBottom="64dp"
@@ -95,11 +95,13 @@
         app:layout_constraintVertical_bias="0.256" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/loginToRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:text="@string/action_register"
+        android:textColor="@color/md_theme_dark_inversePrimary"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView5"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toTopOf="@+id/textView5"

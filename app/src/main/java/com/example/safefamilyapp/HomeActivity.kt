@@ -15,6 +15,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        supportActionBar?.hide()
+
         loadFragment(HomeFragment())
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
