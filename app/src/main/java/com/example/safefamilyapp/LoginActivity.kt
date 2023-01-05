@@ -3,6 +3,7 @@ package com.example.safefamilyapp
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Button
@@ -11,8 +12,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.example.safefamilyapp.fragments.ProfileFragment
 import com.example.safefamilyapp.models.Login
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.Gson
+import java.io.File
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginButton: Button
@@ -49,8 +54,8 @@ class LoginActivity : AppCompatActivity() {
             loading.visibility = View.VISIBLE
             val login = Login(username.text.toString(), password.text.toString())
 
-            //loginWithApi(login)
-            loginWithoutApi()
+            loginWithApi(login)
+            //loginWithoutApi()
 
         }
 
@@ -72,17 +77,54 @@ class LoginActivity : AppCompatActivity() {
             if (it == null) {
                 Toast.makeText(this, "Błąd", Toast.LENGTH_SHORT).show()
             } else {
+                //Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+
+                val x = Gson().toJson(it)
+                //Toast.makeText(this, x, Toast.LENGTH_LONG).show()
+
                 finish()
-                val intent = Intent(this, HomeActivity::class.java)
-                startActivity(intent)
+                //if (it.Role == "User"){
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.putExtra("token", it.Token)
+                    //intent2.putExtra("tokenForGuard", it.Token)
+                    intent.putExtra("refreshToken", it.RefreshToken.Token)
+                    intent.putExtra("token2", it.toString())
+                    startActivity(intent)
+               // }
+                /*else if (it.Role == "Guard") {
+                    val intent = Intent(this, GuardActivity::class.java)
+                    intent.putExtra("token", it.Token)
+                    //intent2.putExtra("tokenForGuard", it.Token)
+                    intent.putExtra("refreshToken", it.RefreshToken.Token)
+                    intent.putExtra("token2", it.toString())
+                    startActivity(intent)
+                }*/
+                //val intent2 = Intent(this, AddGuardActivity::class.java)
+                //intent.putExtra("token", it.Token)
+                //intent2.putExtra("tokenForGuard", it.Token)
+                //intent.putExtra("refreshToken", it.RefreshToken.Token)
+                //intent.putExtra("token2", it.toString())
+
+                //val json = Gson().toJson(it)
+
+                Log.i("LoginActivity Response", x)
+
+                //val intent2 = Intent(this, ProfileFragment::class.java)
+                //intent2.putExtra("token", it.toString())
+
             }
         }
     }
 
     private fun loginWithoutApi() {
         finish()
-        val intent = Intent(this, GuardActivity::class.java)
-        startActivity(intent)
+
+        val token = "{Token=eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJMb2dpbiI6InRlc3QxIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTY3Mjg2Mjc5NX0.Rf93Pp4mzW8EnlOj7yW81wUphsqb7k3Er3nS_oIVFj9rjR7vnA43OXq7_Rl-NCeX4rdxGDTwgGC3E47tv40NWg, status=1.0, Role=User, RefreshToken={Token=let3HE8pIFxE8NZLWuMF810LMnR64+2xAnyfMFk2Ca/F1Qwxr81PY183+c6/jU4Bv8gOhEsArvNIKvRp2UIxvg==, CreatedDate=2023-01-04T20:16:35.0703626+01:00, ValidTo=2023-01-05T20:16:35.0703654+01:00}}"
+        val x = Gson().toJson(token)
+        Toast.makeText(this, x, Toast.LENGTH_LONG).show()
+    //val intent = Intent(this, HomeActivity::class.java)
+        //intent.putExtra("token", token)
+        //startActivity(intent)
     }
 
     // A placeholder username validation check

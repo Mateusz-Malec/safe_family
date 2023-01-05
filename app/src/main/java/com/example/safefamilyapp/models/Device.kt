@@ -1,6 +1,8 @@
 package com.example.safefamilyapp.models
 
 data class Device(
-    val name: String,
-    val id: String,
+    val DeviceType: Int,
+    val DeviceId: String,
+    val Longitude: Double,
+    val Latitude: Double
 )

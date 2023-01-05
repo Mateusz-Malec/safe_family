@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/profilePhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="224dp"
@@ -49,14 +49,24 @@
         app:layout_constraintTop_toBottomOf="@+id/tokenRefresh" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/profileEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:text="mail@mail.pl"
-        app:layout_constraintEnd_toEndOf="@+id/textView2"
-        app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintEnd_toEndOf="@+id/profilePhone"
+        app:layout_constraintStart_toStartOf="@+id/profilePhone"
+        app:layout_constraintTop_toBottomOf="@+id/profilePhone" />
+
+    <Button
+        android:id="@+id/btnLogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log Out"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileEmail" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

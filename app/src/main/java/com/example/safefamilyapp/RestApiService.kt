@@ -1,30 +1,29 @@
 package com.example.safefamilyapp
 
+import android.content.Intent
 import android.util.Log
-import com.example.safefamilyapp.models.Login
-import com.example.safefamilyapp.models.Register
+import com.example.safefamilyapp.models.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 
 class RestApiService {
 
     var responseBody: Any? = null
 
-    fun registerUser(userData: Register, onResult: (Register?) -> Unit) {
+    fun registerUser(userData: Register, onResult: (Any?) -> Unit) {
         val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
 
         //val retIn = ServiceBuilder.buildService().create(ApiInterface::class.java)
 
         retrofit.registerUser(userData).enqueue(
-            object : Callback<Register> {
-                override fun onFailure(call: Call<Register>, t: Throwable) {
+            object : Callback<Any> {
+                override fun onFailure(call: Call<Any>, t: Throwable) {
                     onResult(null)
                     Log.e("Error", t.message!!)
                 }
 
-                override fun onResponse(call: Call<Register>, response: Response<Register>) {
+                override fun onResponse(call: Call<Any>, response: Response<Any>) {
                     val addedUser = response.body()
                     onResult(addedUser)
                     //Log.d("registerUser", response.code().toString() )
@@ -96,23 +95,22 @@ class RestApiService {
         )
     }*/
 
-    fun loginUser2(login: Login, onResult: (Any?) -> Unit) {
+    fun loginUser2(login: Login, onResult: (AccessToken?) -> Unit) {
         val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
         retrofit.loginUser(login.Login, login.Password).enqueue(
-            object : Callback<Any> {
-                override fun onFailure(call: Call<Any>, t: Throwable) {
+            object : Callback<AccessToken> {
+                override fun onFailure(call: Call<AccessToken>, t: Throwable) {
                     onResult(null)
                     Log.e("Error", t.message!!)
                 }
 
-                override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                override fun onResponse(call: Call<AccessToken>, response: Response<AccessToken>) {
                     responseBody = response.body()
-                    //File.createTempFile("filename", null, context.cacheDir)
-                    //val externalCacheFile = File(context.externalCacheDir, filename)
 
-                    onResult(responseBody)
+                    onResult(response.body())
                     if (response.code() == 200) {
-                        Log.d("Login success!\n\n", responseBody.toString())
+                        Log.d("Login success!", response.body().toString())
+                        response.body()?.let { Log.d("Login success!", it.Token) }
                     } else {
                         Log.e("Login failed!", response.code().toString())
                     }
@@ -121,13 +119,63 @@ class RestApiService {
         )
     }
 
-    fun refreshToken(token: Any?, onResult: (Any?) -> Unit) {
+    fun refreshToken(token: String, refreshToken: String, onResult: (AccessToken?) -> Unit) {
+        val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
+        retrofit.refreshLogin(token, refreshToken).enqueue(
+            object : Callback<AccessToken> {
+                override fun onFailure(call: Call<AccessToken>, t: Throwable) {
+                    onResult(null)
+                    Log.e("Error", t.message!!)
+                }
+
+                override fun onResponse(call: Call<AccessToken>, response: Response<AccessToken>) {
+
+                    if (response.code() == 200) {
+                        Log.d("Login refresh!", response.body().toString())
+                        Log.i("ZWROTKA", response.toString())
+
+                    } else {
+                        Log.e("Refresh failed!",
+                            response.code().toString() + " " + response.message())
+                        Log.e("Failed refresh!----response", response.body().toString())
+                        Log.e("zwrotka err", response.toString())
+                    }
+                }
+            }
+        )
+    }
+
+
+    fun displayProfile(token: String, onResult: (UserProfile?) -> Unit) {
+        val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
+
+        retrofit.displayProfile(token).enqueue(
+            object : Callback<UserProfile> {
+                override fun onFailure(call: Call<UserProfile>, t: Throwable) {
+                    onResult(null)
+                    Log.e("Error", t.message!!)
+                }
+
+                override fun onResponse(call: Call<UserProfile>, response: Response<UserProfile>) {
+
+                    if (response.code() == 200) {
+                        Log.d("Your profile data", response.body().toString())
+                        onResult(response.body())
+                    } else {
+                        Log.e("Display failed!",
+                            response.code().toString() + " " + response.message())
+                    }
+                }
+            }
+        )
+    }
+
+    fun addGuard(token: String, addGuard: Guard, onResult: (Any?) -> Unit) {
         val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
 
         //val retIn = ServiceBuilder.buildService().create(ApiInterface::class.java)
 
-
-        retrofit.refreshLogin(responseBody).enqueue(
+        retrofit.addGuard(token, addGuard).enqueue(
             object : Callback<Any> {
                 override fun onFailure(call: Call<Any>, t: Throwable) {
                     onResult(null)
@@ -135,18 +183,73 @@ class RestApiService {
                 }
 
                 override fun onResponse(call: Call<Any>, response: Response<Any>) {
-                    //val addedUser = response.body()
-                    //onResult(addedUser)
+                    val addedGuard = response.body()
+
                     //Log.d("registerUser", response.code().toString() )
 
-                    if (response.code() == 200) {
-                        Log.d("Login refresh!", response.toString())
-
+                    if (response.code() == (200 or 201)) {
+                        Log.d("Registration guard success!", response.toString())
+                        onResult(addedGuard)
                     } else {
-                        Log.e("Refresh failed!",
+                        Log.e("Registration Guard failed!",
                             response.code().toString() + " " + response.message())
                     }
                 }
             }
-        )}
+        )
+    }
+
+    fun getGuards(token: String, onResult: (Array<GuardView>?) -> Unit) {
+        val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
+
+        retrofit.getGuards(token).enqueue(
+            object : Callback<Array<GuardView>> {
+                override fun onFailure(call: Call<Array<GuardView>>, t: Throwable) {
+                    onResult(null)
+                    Log.e("Error", t.message!!)
+                }
+
+                override fun onResponse(call: Call<Array<GuardView>>, response: Response<Array<GuardView>>) {
+
+                    if (response.code() == 200) {
+                        Log.d("Your guards", response.body()!!.forEach { it.toString() }.toString())
+                        onResult(response.body())
+                    } else {
+                        Log.e("Get guards failed!",
+                            response.code().toString() + " " + response.toString())
+                    }
+                }
+            }
+        )
+    }
+
+
+    fun addDevice(token: String, device: Device, onResult: (Any?) -> Unit) {
+        val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
+
+        //val retIn = ServiceBuilder.buildService().create(ApiInterface::class.java)
+
+        retrofit.addDevice(token, device).enqueue(
+            object : Callback<Any> {
+                override fun onFailure(call: Call<Any>, t: Throwable) {
+                    onResult(null)
+                    Log.e("Error", t.message!!)
+                }
+
+                override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                    val addedGuard = response.body()
+
+                    //Log.d("registerUser", response.code().toString() )
+
+                    if (response.code() == (200 or 201)) {
+                        Log.d("Add device success!", response.toString())
+                        onResult(addedGuard)
+                    } else {
+                        Log.e("Device connect failed!",
+                            response.code().toString() + " " + response.message())
+                    }
+                }
+            }
+        )
+    }
 }

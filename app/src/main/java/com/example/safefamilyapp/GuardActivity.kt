@@ -3,10 +3,10 @@ package com.example.safefamilyapp
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
 import android.location.Location
+import android.location.LocationRequest
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -19,8 +19,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 class GuardActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -29,7 +31,8 @@ class GuardActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val locationPermissionCode = 2
-    private lateinit var list: List<Address>
+    private lateinit var list: List<Location>
+    lateinit var latLng: LatLng
 
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,31 +43,51 @@ class GuardActivity : AppCompatActivity(), OnMapReadyCallback {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                locationPermissionCode)
-            return
-        }
 
-        fusedLocationClient.lastLocation
+        /*fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
+            if (location == null)
+                    Toast.makeText(this, "Cannot get location.", Toast.LENGTH_SHORT).show()
+                else {
+                    list = listOf(location)
+                }
                 // Got last known location. In some rare situations this can be null.
-                val geocoder = Geocoder(this, Locale.getDefault())
-                list =
-                    geocoder.getFromLocation(location!!.latitude, location!!.longitude, 1)
+//                val geocoder = Geocoder(this, Locale.getDefault())
+//                list =
+//                    geocoder.getFromLocation(location!!.latitude, location.longitude, 1)
+            }*/
+
+        fusedLocationClient.getCurrentLocation(LocationRequest.QUALITY_HIGH_ACCURACY,
+            object : CancellationToken() {
+                override fun onCanceledRequested(p0: OnTokenCanceledListener) =
+                    CancellationTokenSource().token
+
+                override fun isCancellationRequested() = false
+            })
+            .addOnSuccessListener { location: Location? ->
+                if (location == null)
+                    Toast.makeText(this, "Cannot get location.", Toast.LENGTH_SHORT).show()
+                else {
+                    list = listOf(location)
+                    //latLng = LatLng(list[0].latitude, list[0].longitude)
+
+                    //mMap.addMarker(MarkerOptions().position(p1))
+                }
+
             }
 
         fab.setOnClickListener {
-            Snackbar.make(it,
+            /*Snackbar.make(it,
                 list[0].postalCode + " " + list[0].featureName + " "
                         + list[0].subAdminArea,
-                Snackbar.LENGTH_LONG).show()
-            //Toast.makeText(this, list[0].latitude.toString() + list[0].longitude.toString(), Toast.LENGTH_LONG).show()
+                Snackbar.LENGTH_LONG).show()*/
+
+            val p1 = LatLng(list[0].latitude, list[0].longitude)
+            Toast.makeText(this,
+                p1.toString(),
+                Toast.LENGTH_LONG).show()
+            //mMap.addMarker(MarkerOptions()
+             //   .position(p1))
         }
 
         val mapFragment = supportFragmentManager
@@ -74,6 +97,7 @@ class GuardActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
 
         // Współrzędne miejsca
         val p = LatLng(50.81, 19.1)
@@ -96,6 +120,25 @@ class GuardActivity : AppCompatActivity(), OnMapReadyCallback {
             .build()              // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == 101) {
+            // in the below line, we are checking if permission is granted.
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // if permissions are granted we are displaying below toast message.
+                Toast.makeText(applicationContext, "Permission granted.", Toast.LENGTH_SHORT).show()
+            } else {
+                // in the below line, we are displaying toast message if permissions are not granted.
+                Toast.makeText(applicationContext, "Permission denied.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 }

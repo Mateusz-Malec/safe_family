@@ -1,28 +1,28 @@
 package com.example.safefamilyapp.fragments
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
-import android.telephony.TelephonyManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.safefamilyapp.DevicesAdapter
-import com.example.safefamilyapp.R
+import com.example.safefamilyapp.*
 import com.example.safefamilyapp.models.Device
+import com.example.safefamilyapp.models.GuardView
 
 class HomeFragment : Fragment() {
 
-private lateinit var id: String
+    private lateinit var id: String
+
+    private val list = ArrayList<GuardView>()
+
     @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,14 +34,24 @@ private lateinit var id: String
         id = Settings.Secure.getString(requireContext().contentResolver, Settings.Secure.ANDROID_ID)
 
 
-        val list = ArrayList<Device>()
+        //val fullResponse = requireActivity().intent.extras!!.getString("token")
+        val fullResponse2 = requireActivity().intent.extras!!.getString("token")
 
-        list.add(Device("urządzenie mamy",id))
-        list.add(Device("urządzenie babci", id))
+        getGuards(fullResponse2!!)
+
+        //val json = Gson().toJson(fullResponse)
+        //list.add(Device(1, "fullResponse!!", 1.1, 1.1))
+        //list.add(Device(1, id, 15.2, 13.4))
 
         val recyclerView: RecyclerView = view.findViewById(R.id.device_list)
 
-        val adapter = DevicesAdapter(list)
+        val list2 = ArrayList<GuardView>()
+        val l = ArrayList<Device>()
+        l.add(Device(1,"d",3.3,5.6))
+
+        list2.add(GuardView("dssd", "dsd","dssd","sdsd",l))
+        val adapter = GuardsAdapter(list)
+
 
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = adapter
@@ -49,7 +59,28 @@ private lateinit var id: String
         return view
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    private fun getGuards(token: String) {
+        val apiService = RestApiService()
+        apiService.getGuards("Bearer $token") {
+            if (it == null) {
+                //Log.e("Register Error", "Błąd")
+            } else {
+                for (item in it) {
+                    list.add(item)
+                    Log.i("Guard item", item.toString())
+                }
+                //Log.i("ProfileInfi", it.toString())
+
+            }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray,
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == 101) {

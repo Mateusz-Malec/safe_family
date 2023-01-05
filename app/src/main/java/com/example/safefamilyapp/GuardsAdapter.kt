@@ -8,22 +8,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.safefamilyapp.models.Device
 import com.example.safefamilyapp.models.GuardView
 
-class DevicesAdapter(private val list: List<GuardView>) : RecyclerView.Adapter<DevicesAdapter.ViewHolder>() {
+class GuardsAdapter(private val list: List<GuardView>) : RecyclerView.Adapter<GuardsAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val deviceName: TextView
-        val id: TextView
+        val guardUsername: TextView
+        val guardName: TextView
+        val guardLastActive: TextView
 
         init {
-            deviceName = view.findViewById(R.id.device_name)
-            id = view.findViewById(R.id.device_id)
+            guardUsername = view.findViewById(R.id.guardUsername)
+            guardName = view.findViewById(R.id.guardName)
+            guardLastActive = view.findViewById(R.id.guardLastActive)
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.device_item, parent, false)
+            .inflate(R.layout.guard_item, parent, false)
 
         return ViewHolder(view)
     }
@@ -33,7 +35,8 @@ class DevicesAdapter(private val list: List<GuardView>) : RecyclerView.Adapter<D
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.deviceName.text = list[position].Login
-        holder.id.text = list[position].LastActive
+        holder.guardUsername.text = list[position].Login
+        holder.guardName.text = "${list[position].Name} ${list[position].SurName}"
+        holder.guardLastActive.text = list[position].LastActive
     }
 }
