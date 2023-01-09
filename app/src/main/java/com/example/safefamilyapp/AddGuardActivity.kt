@@ -1,14 +1,13 @@
 package com.example.safefamilyapp
 
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.safefamilyapp.models.Guard
-import com.example.safefamilyapp.models.Register
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -22,10 +21,15 @@ class AddGuardActivity : AppCompatActivity() {
     private lateinit var surname: TextInputEditText
     private lateinit var phoneNumber: TextInputEditText
     private lateinit var btn: Button
+    private lateinit var preferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_guard)
+
+        supportActionBar?.title = "Add guard"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         username = findViewById(R.id.guard_etLogin)
         password = findViewById(R.id.guard_etPassword)
@@ -34,6 +38,9 @@ class AddGuardActivity : AppCompatActivity() {
         surname = findViewById(R.id.guard_etSurname)
         phoneNumber = findViewById(R.id.guard_etPhoneNumber)
         btn = findViewById(R.id.registerGuardBtn)
+
+        preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE)
+
 
         btn.setOnClickListener {
             val user = Guard(
@@ -53,8 +60,9 @@ class AddGuardActivity : AppCompatActivity() {
     }
     @OptIn(DelicateCoroutinesApi::class)
     private fun addGuard(guard: Guard) {
-        val token = intent.getStringExtra("tokenForGuard")
+        //val token = intent.getStringExtra("tokenForGuard")
 
+        val token = preferences.getString("TOKEN",null)
         GlobalScope.launch {
             val apiService = RestApiService()
             apiService.addGuard("Bearer $token", guard) {
@@ -66,5 +74,10 @@ class AddGuardActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

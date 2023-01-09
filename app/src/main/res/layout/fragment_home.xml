@@ -25,9 +25,10 @@
             android:text="odswiez liste" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/device_list"
+            android:id="@+id/listOfGuards"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:listitem="@layout/guard_item" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

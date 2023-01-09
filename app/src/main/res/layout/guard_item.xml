@@ -16,18 +16,25 @@
             android:id="@+id/guardUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nazwa urządzenia" />
+            android:text="Nazwa urządzenia"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
             android:id="@+id/guardName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Imię nazwisko" />
+            android:text="Imię nazwisko"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
         <TextView
             android:id="@+id/guardLastActive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Last active:" />
+        <TextView
+            android:id="@+id/guardListDevices"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Devices:" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

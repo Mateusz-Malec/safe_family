@@ -40,7 +40,6 @@ interface ApiInterface {
     @GET("/api/User/getProfile")
     fun displayProfile(@Header("Authorization") token: String): Call<UserProfile>
 
-
     //@Headers("Content-Type: application/json")
     @PUT("/api/User/AddGuard")
     fun addGuard(@Header("Authorization") token: String,
@@ -49,8 +48,21 @@ interface ApiInterface {
     @GET("/api/User/GetGuards")
     fun getGuards(@Header("Authorization") token: String): Call<Array<GuardView>>
 
-
     @PUT("/api/User/AddDevice")
     fun addDevice(@Header("Authorization") token: String,
-                 @Body device: Device): Call<Any>
+                 @Body device: Device): Call<Void>
+
+    @PUT("/api/Guard/AddDevice")
+    fun addDeviceGuard(@Header("Authorization") token: String,
+                  @Body device: Device): Call<Void>
+
+    @GET("/api/DeviceLocation/getAll")
+    fun getAllLocation(@Header("Authorization") token: String): Call<Array<Device>>
+
+    @POST("/api/DeviceLocation/update")
+    fun sendLocation(@Header("Authorization") token: String,
+                     @Body device: Device): Call<Void>
+
+    @POST("/api/Login/passwordChange")
+    fun resetPassword(@Query("email") mail: String): Call<Void>
 }

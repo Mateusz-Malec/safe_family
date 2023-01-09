@@ -5,5 +5,5 @@ data class GuardView(
     val SurName: String,
     val Login: String,
     val LastActive: String,
-    val Devices: ArrayList<Device>
+    val Devices: ArrayList<DeviceView>
 )

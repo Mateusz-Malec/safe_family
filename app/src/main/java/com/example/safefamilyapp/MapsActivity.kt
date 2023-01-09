@@ -64,15 +64,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .build()              // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
-        textView.text = getAddress(place.latitude, place.longitude)
+        //textView.text = getAddress(place.latitude, place.longitude)
     }
 
     // Funkcja, która zamienia współrzędne na adres (ulica, numer, miejscowość, kraj)
-    private fun getAddress(lat: Double, lng: Double): String {
+    /*private fun getAddress(lat: Double, lng: Double): String {
         val geocoder = Geocoder(this)
         val list = geocoder.getFromLocation(lat, lng, 1)
         return list[0].getAddressLine(0)
-    }
+    }*/
     
     private fun vectorToBitmap(context: Context, drawableId: Int): BitmapDescriptor {
         val drawable = ContextCompat.getDrawable(context, drawableId)

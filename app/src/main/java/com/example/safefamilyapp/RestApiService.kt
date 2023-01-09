@@ -3,6 +3,7 @@ package com.example.safefamilyapp
 import android.content.Intent
 import android.util.Log
 import com.example.safefamilyapp.models.*
+import com.google.android.gms.maps.model.LatLng
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -10,6 +11,7 @@ import retrofit2.Response
 class RestApiService {
 
     var responseBody: Any? = null
+    var listOfLocation: ArrayList<LatLng>? = null
 
     fun registerUser(userData: Register, onResult: (Any?) -> Unit) {
         val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
@@ -110,6 +112,7 @@ class RestApiService {
                     onResult(response.body())
                     if (response.code() == 200) {
                         Log.d("Login success!", response.body().toString())
+
                         response.body()?.let { Log.d("Login success!", it.Token) }
                     } else {
                         Log.e("Login failed!", response.code().toString())
@@ -173,8 +176,6 @@ class RestApiService {
     fun addGuard(token: String, addGuard: Guard, onResult: (Any?) -> Unit) {
         val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
 
-        //val retIn = ServiceBuilder.buildService().create(ApiInterface::class.java)
-
         retrofit.addGuard(token, addGuard).enqueue(
             object : Callback<Any> {
                 override fun onFailure(call: Call<Any>, t: Throwable) {
@@ -184,9 +185,6 @@ class RestApiService {
 
                 override fun onResponse(call: Call<Any>, response: Response<Any>) {
                     val addedGuard = response.body()
-
-                    //Log.d("registerUser", response.code().toString() )
-
                     if (response.code() == (200 or 201)) {
                         Log.d("Registration guard success!", response.toString())
                         onResult(addedGuard)
@@ -212,7 +210,7 @@ class RestApiService {
                 override fun onResponse(call: Call<Array<GuardView>>, response: Response<Array<GuardView>>) {
 
                     if (response.code() == 200) {
-                        Log.d("Your guards", response.body()!!.forEach { it.toString() }.toString())
+                        Log.d("Your guards", response.body().toString())
                         onResult(response.body())
                     } else {
                         Log.e("Get guards failed!",
@@ -226,26 +224,119 @@ class RestApiService {
 
     fun addDevice(token: String, device: Device, onResult: (Any?) -> Unit) {
         val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
-
-        //val retIn = ServiceBuilder.buildService().create(ApiInterface::class.java)
-
         retrofit.addDevice(token, device).enqueue(
-            object : Callback<Any> {
-                override fun onFailure(call: Call<Any>, t: Throwable) {
+            object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
                     onResult(null)
                     Log.e("Error", t.message!!)
                 }
 
-                override fun onResponse(call: Call<Any>, response: Response<Any>) {
-                    val addedGuard = response.body()
-
-                    //Log.d("registerUser", response.code().toString() )
-
-                    if (response.code() == (200 or 201)) {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.code() == 200) {
                         Log.d("Add device success!", response.toString())
-                        onResult(addedGuard)
+                        onResult(response)
                     } else {
                         Log.e("Device connect failed!",
+                            response.code().toString() + " " + response.message())
+                    }
+                }
+            }
+        )
+    }
+
+    fun addDeviceGuard(token: String, device: Device, onResult: (Any?) -> Unit) {
+        val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
+        retrofit.addDeviceGuard(token, device).enqueue(
+            object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    onResult(null)
+                    Log.e("Error", t.message!!)
+                }
+
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.code() == 200) {
+                        Log.d("Add device success!", response.toString())
+                        onResult(response)
+                    } else {
+                        Log.e("Device connect failed!",
+                            response.code().toString() + " " + response.message())
+                    }
+                }
+            }
+        )
+    }
+
+    fun getAll(token: String, onResult: (Array<Device>?) -> Unit) {
+        val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
+
+        retrofit.getAllLocation(token).enqueue(
+            object : Callback<Array<Device>> {
+                override fun onFailure(call: Call<Array<Device>>, t: Throwable) {
+                    onResult(null)
+                    Log.e("Error", t.message!!)
+                }
+
+                override fun onResponse(call: Call<Array<Device>>, response: Response<Array<Device>>) {
+
+                    if (response.code() == 200) {
+                        Log.d("Your devices", response.body().toString())
+                        onResult(response.body())
+
+                    } else {
+                        Log.e("Get all devices failed!",
+                            response.code().toString() + " " + response.toString())
+                    }
+                }
+            }
+        )
+    }
+
+    fun sendLocation(token: String,device: Device, onResult: (Any?) -> Unit) {
+        val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
+
+        retrofit.sendLocation(token, device).enqueue(
+            object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    onResult(null)
+                    Log.e("Error", t.message!!)
+                }
+
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+
+                    if (response.code() == 200) {
+                        Log.d("Your locations", response.body().toString())
+                        onResult(response)
+                    } else {
+                        Log.e("Location sending failed!",
+                            response.code().toString() + " " + response.toString())
+                    }
+                }
+            }
+        )
+    }
+
+    fun resetPassword(mail: String, onResult: (Any?) -> Unit) {
+        val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
+
+        retrofit.resetPassword(mail).enqueue(
+            object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    onResult(null)
+                    Log.e("Error", t.message!!)
+                }
+
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    onResult(response)
+                    //Log.d("registerUser", response.code().toString() )
+
+                    if (response.code() == 200) {
+                        Log.d("Check your mail", response.toString())
+
+                    } else if (response.code()==400) {
+                        Log.d("E-mail nie istnieje", response.toString())
+                    }
+                    else {
+                        Log.e("Registration failed!",
                             response.code().toString() + " " + response.message())
                     }
                 }
